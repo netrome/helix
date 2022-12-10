@@ -40,6 +40,7 @@
 | `:primary-clipboard-paste-before` | Paste primary clipboard before selections. |
 | `:primary-clipboard-paste-replace` | Replace selections with content of system primary clipboard. |
 | `:show-clipboard-provider` | Show clipboard provider name in status bar. |
+| `:copy-file-name-to-clipboard` | Copy current file name to system clipboard. |
 | `:change-current-directory`, `:cd` | Change the current working directory. |
 | `:show-directory`, `:pwd` | Show the current working directory. |
 | `:encoding` | Set encoding. Based on `https://encoding.spec.whatwg.org`. |

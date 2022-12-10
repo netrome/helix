@@ -954,6 +954,31 @@ fn show_clipboard_provider(
     Ok(())
 }
 
+fn copy_file_name_to_clipboard(
+    cx: &mut compositor::Context,
+    _args: &[Cow<str>],
+    event: PromptEvent,
+) -> anyhow::Result<()> {
+    if event != PromptEvent::Validate {
+        return Ok(());
+    }
+
+    let focused_document_id = cx.editor.tree.get(cx.editor.tree.focus).doc;
+
+    let relative_file_path = cx
+        .editor
+        .document(focused_document_id)
+        .and_then(|doc| doc.relative_path())
+        .ok_or_else(|| anyhow::anyhow!("Couldn't get path of current doc"))?;
+
+    cx.editor.clipboard_provider.set_contents(
+        relative_file_path.to_string_lossy().into_owned(),
+        ClipboardType::Clipboard,
+    )?;
+
+    Ok(())
+}
+
 fn change_current_directory(
     cx: &mut compositor::Context,
     args: &[Cow<str>],
@@ -2073,6 +2098,13 @@ pub const TYPABLE_COMMAND_LIST: &[TypableCommand] = &[
             aliases: &[],
             doc: "Show clipboard provider name in status bar.",
             fun: show_clipboard_provider,
+            completer: None,
+        },
+        TypableCommand {
+            name: "copy-file-name-to-clipboard",
+            aliases: &["cpf"],
+            doc: "Copy current file name to system clipboard",
+            fun: copy_file_name_to_clipboard,
             completer: None,
         },
         TypableCommand {
