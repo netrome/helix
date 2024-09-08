@@ -1140,6 +1140,35 @@ fn show_current_directory(
     Ok(())
 }
 
+fn copy_file_path(
+    cx: &mut compositor::Context,
+    _args: &[Cow<str>],
+    event: PromptEvent,
+) -> anyhow::Result<()> {
+    if event != PromptEvent::Validate {
+        return Ok(());
+    }
+
+    copy_file_path_impl(&mut cx.editor);
+
+    Ok(())
+}
+
+fn copy_file_path_impl(editor: &mut Editor) {
+    let doc_id = view!(editor).doc;
+    let path = editor
+        .document(doc_id)
+        .and_then(|doc| doc.path())
+        .and_then(|path| path.to_str())
+        .unwrap_or_default()
+        .to_string();
+
+    match editor.registers.write('+', vec![path.clone()]) {
+        Ok(_) => editor.set_status(format!("yanked file path {path} to register +")),
+        Err(err) => editor.set_error(err.to_string()),
+    };
+}
+
 /// Sets the [`Document`]'s encoding..
 fn set_encoding(
     cx: &mut compositor::Context,
@@ -2863,6 +2892,13 @@ pub const TYPABLE_COMMAND_LIST: &[TypableCommand] = &[
         aliases: &["pwd"],
         doc: "Show the current working directory.",
         fun: show_current_directory,
+        signature: CommandSignature::none(),
+    },
+    TypableCommand {
+        name: "copy-file-path",
+        aliases: &["cpf"],
+        doc: "Copy the file path of the associated buffer if any.",
+        fun: copy_file_path,
         signature: CommandSignature::none(),
     },
     TypableCommand {

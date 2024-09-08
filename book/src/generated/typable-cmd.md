@@ -46,6 +46,7 @@
 | `:show-clipboard-provider` | Show clipboard provider name in status bar. |
 | `:change-current-directory`, `:cd` | Change the current working directory. |
 | `:show-directory`, `:pwd` | Show the current working directory. |
+| `:copy-file-path`, `:cpf` | Copy the file path of the associated buffer if any. |
 | `:encoding` | Set encoding. Based on `https://encoding.spec.whatwg.org`. |
 | `:character-info`, `:char` | Get info about the character under the primary cursor. |
 | `:reload`, `:rl` | Discard changes and reload from the source file. |
